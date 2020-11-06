@@ -1,55 +1,15 @@
-/*************************************************************
-  Download latest Blynk library here:
-    https://github.com/blynkkk/blynk-library/releases/latest
-
-  Blynk is a platform with iOS and Android apps to control
-  Arduino, Raspberry Pi and the likes over the Internet.
-  You can easily build graphic interfaces for all your
-  projects by simply dragging and dropping widgets.
-
-    Downloads, docs, tutorials: http://www.blynk.cc
-    Sketch generator:           http://examples.blynk.cc
-    Blynk community:            http://community.blynk.cc
-    Follow us:                  http://www.fb.com/blynkapp
-                                http://twitter.com/blynk_app
-
-  Blynk library is licensed under MIT license
-  This example code is in public domain.
-
- *************************************************************
-
-  This sketch shows how to write values to Virtual Pins
-
-  NOTE:
-  BlynkTimer provides SimpleTimer functionality:  
-    http://playground.arduino.cc/Code/SimpleTimer
-
-  App project setup:
-    Value Display widget attached to Virtual Pin V5
- *************************************************************/
-
-/* Comment this out to disable prints and save space */
 #define BLYNK_PRINT Serial
-
 
 #include <ESP8266WiFi.h>
 #include <BlynkSimpleEsp8266.h>
 
-// You should get Auth Token in the Blynk App.
-// Go to the Project Settings (nut icon).
+// Auth Token taken from BLYNK app
 char auth[] = "N5oAgEdLbzuWNazBPYCeUWQqbTYYaeNQ";
 
-// Your WiFi credentials.
-// Set password to "" for open networks.
-//char ssid[] = "IOT-SNIST";
-//char pass[] = "snist@iot123";
+// WiFi credentials.
+char ssid[] = "IOT-SNIST";
+char pass[] = "snist@iot123"; // Set password to "" for open networks.
 
-char ssid[] = "aaryan";
-char pass[] = "aaryan12";
-
-
-//char ssid[] = "wifi@hone";
-//char pass[] = "murthy115";
 BlynkTimer timer;
 
 WidgetLED led1(V5);
@@ -59,14 +19,12 @@ WidgetLED led1(V5);
 #define BLYNK_RED       "#D3435C"
 #define BLYNK_DARK_BLUE "#5F7CD8"
 
-
 byte sensorInterrupt = D4; 
 byte sensorPin       = D4;
 
 byte relay = D5;
 
-// The hall-effect flow sensor outputs approximately 4.5 pulses per second per
-// litre/minute of flow.
+// The hall-effect flow sensor outputs approximately 4.5 pulses per second for litre/minute of flow.
 float calibrationFactor = 4.5;
 
 volatile byte pulseCount; 
@@ -82,26 +40,22 @@ float percent;
 
 int state;
 
-// This function sends Arduino's up time every second to Virtual Pin (5).
-// In the app, Widget's reading frequency should be set to PUSH. This means
-// that you define how often to send data to Blynk App.
-
+// Receiving Threshold limit from app
   BLYNK_WRITE(V1)
 {
   threshold = param.asInt(); // assigning incoming value from pin V1 to a variable
     Serial.print ( "Threshold limit = ");
     Serial.print(threshold);
     Serial.println(" Liters");
-  // process received value
 }
 
+// Receiving On/Off state from app
 BLYNK_WRITE(V0)
 {
-  int state = param.asInt(); // assigning incoming value from pin V1 to a variable
+  int state = param.asInt(); // assigning incoming value from pin V2 to a variable
     Serial.print("Tap is : ");
     Serial.println(state);
-  // process received value
-
+  
    if (state == 1)
    {
     digitalWrite(relay, HIGH);
